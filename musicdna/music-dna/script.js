@@ -30,4 +30,15 @@ function animate() {
     renderer.render(scene, camera);
 }
 
+// script.js - Mapping Logic
+function mapTrackToDNA(trackData) {
+    const x = (trackData.danceability - 0.5) * 10;
+    const y = (trackData.energy - 0.5) * 10;
+    const z = (trackData.valence - 0.5) * 10;
+    
+    // Create a glowing sphere for this track
+    const color = trackData.valence > 0.5 ? 0x00f2ff : 0x7000ff;
+    addDNAPoint(x, y, z, color);
+}
+
 animate();
