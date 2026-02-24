@@ -1,0 +1,58 @@
+:root {
+    --bg: #09090b;
+    --accent: #00f2ff;
+    --glass: rgba(255, 255, 255, 0.05);
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg);
+    color: #fafafa;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    /* Prevents scrollbars from messing with 3D */
+}
+
+#dna-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    /* Sits behind the UI */
+}
+
+#ui-layer {
+    position: relative;
+    z-index: 10;
+    /* Sits on top of the 3D */
+    padding: 2rem;
+    pointer-events: none;
+    /* Allows you to click the 3D canvas through the UI */
+}
+
+.stats-panel {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    width: 250px;
+    border-radius: 12px;
+    pointer-events: auto;
+    /* Re-enables clicking for buttons */
+}
+
+button {
+    background: var(--accent);
+    color: black;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--accent);
+}

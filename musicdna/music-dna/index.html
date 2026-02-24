@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sonic DNA Engine</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+      { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
+</head>
+
+<body>
+    <div id="ui-layer">
+        <header>
+            <h1>Music Dna Engine <br> <span class="v-tag">
+                
+                Understand Your Music Taste
+            </span></h1>
+        </header>
+
+        <aside class="stats-panel">
+            <div class="score-card">
+                <label>Identity Score</label>
+                <div id="is-score">--.-</div>
+            </div>
+            <button id="login-btn">Connect Identity</button>
+        </aside>
+    </div>
+
+    <canvas id="dna-canvas"></canvas>
+
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
