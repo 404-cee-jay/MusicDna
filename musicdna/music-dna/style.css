@@ -36,6 +36,48 @@ body {
     z-index: 0;
 }
 
+
+.search-container {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    z-index: 100;
+}
+
+.search-wrapper {
+    display: flex;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 5px 15px;
+    transition: var(--transition);
+}
+
+.search-wrapper:focus-within {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+}
+
+#ai-search {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+}
+
+#search-spark-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 5px var(--neon-cyan));
+}
+
 /* --- 3. UI LAYOUT & GRID --- */
 #ui-layer {
     position: relative;
@@ -166,3 +208,4 @@ header h1 {
     box-shadow: 0 0 20px var(--neon-cyan);
     transform: translateY(-2px);
 }
+
