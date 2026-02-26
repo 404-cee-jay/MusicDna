@@ -141,3 +141,23 @@ async function fetchMusicDNA() {
 
     return musicDNA;
 }
+
+window.addEventListener('load', async () => {
+    const token = await handleAuthCallback();
+    const storedToken = localStorage.getItem('access_token');
+
+    if (token || storedToken) {
+        document.getElementById('login-btn').innerText = "Identity Linked";
+        
+        // --- START THE ENGINE ---
+        const dnaData = await fetchMusicDNA();
+        console.log("Your Music DNA:", dnaData);
+        
+        // Calculate Identity Score (Average Energy + Valence)
+        const avgScore = (dnaData.reduce((acc, curr) => acc + curr.energy + curr.valence, 0) / (dnaData.length * 2)) * 100;
+        document.getElementById('is-score').innerText = avgScore.toFixed(1);
+        
+        // Send data to Three.js to build the Helix
+        build3DHelix(dnaData);
+    }
+});
