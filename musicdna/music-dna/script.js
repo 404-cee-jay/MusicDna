@@ -42,3 +42,46 @@ function mapTrackToDNA(trackData) {
 }
 
 animate();
+
+// --- AI Search Integration ---
+
+const searchInput = document.querySelector('#ai-search');
+const searchBtn = document.querySelector('#search-spark-btn');
+const aiStatus = document.querySelector('#ai-status');
+
+searchBtn.addEventListener('click', async () => {
+    const query = searchInput.value;
+    if (!query) return;
+
+    // 1. Show the "Thinking" state
+    aiStatus.classList.remove('hidden');
+    aiStatus.innerText = "Oracle is searching the web for your vibe...";
+    
+    try {
+        // 2. The AI Bridge (This is where Gemini will process the 'vibe')
+        // For the MVP, we send the prompt to our AI handler
+        const aiResult = await callGeminiAI(query); 
+        
+        // 3. The Spotify Search
+        // We take the AI's refined "Artist - Song" and find it on Spotify
+        const spotifyTrack = await searchSpotify(aiResult);
+        
+        // 4. Update UI and Play
+        aiStatus.innerText = `Found: ${spotifyTrack.name} by ${spotifyTrack.artist}`;
+        playTrack(spotifyTrack.uri);
+        
+        // 5. Update the DNA Helix
+        updateDNAFocus(spotifyTrack);
+        
+    } catch (error) {
+        aiStatus.innerText = "The Oracle encountered a rift in the data.";
+        console.error(error);
+    }
+});
+
+// --- Placeholder for the AI Call (To be finalized Thursday) ---
+async function callGeminiAI(userPrompt) {
+    // This will hit the Gemini API to turn "Rainy night music" 
+    // into a specific song like "Blue in Green by Miles Davis"
+    return "Miles Davis Blue in Green"; 
+}

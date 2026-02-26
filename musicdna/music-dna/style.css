@@ -209,3 +209,18 @@ header h1 {
     transform: translateY(-2px);
 }
 
+#ai-status {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: var(--neon-cyan);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; text-shadow: 0 0 10px var(--neon-cyan); }
+    100% { opacity: 0.4; }
+}
