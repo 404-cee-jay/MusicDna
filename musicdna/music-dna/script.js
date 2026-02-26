@@ -102,3 +102,42 @@ window.addEventListener('load', async () => {
 document.getElementById('login-btn').addEventListener('click', () => {
     initiateSpotifyAuth();
 });
+
+
+/**
+ * The Harvester - Pulls and processes track DNA
+ */
+
+async function fetchMusicDNA() {
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
+
+    // 1. Get User's Top 50 Tracks
+    const topTracksRes = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=medium_term', {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const tracksData = await topTracksRes.json();
+    const tracks = tracksData.items;
+
+    // 2. Extract IDs to get "Genetic Markers" (Audio Features)
+    const ids = tracks.map(track => track.id).join(',');
+    const featuresRes = await fetch(`https://api.spotify.com/v1/audio-features?ids=${ids}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const featuresData = await featuresRes.json();
+
+    // 3. Merge the Data into a "DNA Object"
+    const musicDNA = tracks.map((track, index) => ({
+        name: track.name,
+        artist: track.artists[0].name,
+        uri: track.uri,
+        image: track.album.images[0].url,
+        // The DNA Markers
+        energy: featuresData.audio_features[index].energy,
+        valence: featuresData.audio_features[index].valence,
+        danceability: featuresData.audio_features[index].danceability,
+        tempo: featuresData.audio_features[index].tempo
+    }));
+
+    return musicDNA;
+}
