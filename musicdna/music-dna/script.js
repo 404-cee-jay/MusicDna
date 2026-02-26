@@ -85,3 +85,20 @@ async function callGeminiAI(userPrompt) {
     // into a specific song like "Blue in Green by Miles Davis"
     return "Miles Davis Blue in Green"; 
 }
+
+import { initiateSpotifyAuth, handleAuthCallback } from './auth.js';
+
+// Check if we just returned from Spotify login
+window.addEventListener('load', async () => {
+    const token = await handleAuthCallback();
+    if (token || localStorage.getItem('access_token')) {
+        console.log("✅ Identity Connected");
+        document.getElementById('login-btn').innerText = "Identity Linked";
+        document.getElementById('login-btn').style.background = "#7000ff"; // Change to Purple
+        // Trigger the DNA build here!
+    }
+});
+
+document.getElementById('login-btn').addEventListener('click', () => {
+    initiateSpotifyAuth();
+});
