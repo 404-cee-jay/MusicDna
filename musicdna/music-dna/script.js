@@ -35,13 +35,13 @@ function mapTrackToDNA(trackData) {
     const x = (trackData.danceability - 0.5) * 10;
     const y = (trackData.energy - 0.5) * 10;
     const z = (trackData.valence - 0.5) * 10;
-    
     // Create a glowing sphere for this track
     const color = trackData.valence > 0.5 ? 0x00f2ff : 0x7000ff;
     addDNAPoint(x, y, z, color);
+    
+    
+    animate();
 }
-
-animate();
 
 // --- AI Search Integration ---
 
@@ -161,3 +161,54 @@ window.addEventListener('load', async () => {
         build3DHelix(dnaData);
     }
 });
+
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+
+let scene, camera, renderer, helixGroup;
+
+export function init3DEngine(dnaData) {
+    const canvas = document.querySelector('#dna-canvas');
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    
+    helixGroup = new THREE.Group();
+
+    dnaData.forEach((track, i) => {
+        // DNA Math: Energy = Height, Valence = Color, Danceability = Radius
+        const angle = i * 0.4;
+        const radius = 2 + (track.danceability * 3); 
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+        const y = (i * 0.25) - 6; // Vertical climb
+
+        const geometry = new THREE.SphereGeometry(0.18, 16, 16);
+        const color = track.valence > 0.5 ? 0x00f2ff : 0x7000ff; // Neon Cyan vs Deep Purple
+        const material = new THREE.MeshPhongMaterial({ 
+            color: color, 
+            emissive: color, 
+            emissiveIntensity: 0.5 
+        });
+        
+        const node = new THREE.Mesh(geometry, material);
+        node.position.set(x, y, z);
+        node.userData = { ...track }; // Store metadata inside the 3D object
+        
+        helixGroup.add(node);
+    });
+
+    const light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(10, 10, 10);
+    scene.add(light, new THREE.AmbientLight(0x404040));
+    
+    scene.add(helixGroup);
+    camera.position.z = 15;
+    animate();
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    if (helixGroup) helixGroup.rotation.y += 0.003;
+    renderer.render(scene, camera);
+}
