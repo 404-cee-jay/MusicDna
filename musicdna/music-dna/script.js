@@ -249,3 +249,23 @@ async function playTrack(uri) {
         headers: { 'Authorization': `Bearer ${token}` }
     });
 }
+
+document.getElementById('search-spark-btn').addEventListener('click', async () => {
+    const query = document.getElementById('ai-search').value;
+    const token = localStorage.getItem('access_token');
+    
+    // 1. AI "Oracle" Simulation (In production, replace with Gemini API call)
+    document.getElementById('ai-status').innerText = "Oracle mapping vibe to DNA...";
+    
+    // 2. Search Spotify for the result
+    const searchRes = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await searchRes.json();
+    const track = data.tracks.items[0];
+
+    if (track) {
+        document.getElementById('ai-status').innerText = `Resolved: ${track.name}`;
+        playTrack(track.uri);
+    }
+});
