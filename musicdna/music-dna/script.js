@@ -212,3 +212,40 @@ function animate() {
     if (helixGroup) helixGroup.rotation.y += 0.003;
     renderer.render(scene, camera);
 }
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+window.addEventListener('click', (event) => {
+    // Calculate mouse position in normalized device coordinates
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(helixGroup.children);
+
+    if (intersects.length > 0) {
+        const track = intersects[0].object.userData;
+        
+        // Update UI
+        document.getElementById('now-playing-title').innerText = track.name;
+        document.getElementById('now-playing-artist').innerText = track.artist;
+        document.getElementById('now-playing-art').src = track.image;
+        document.getElementById('detail-title').innerText = track.name;
+        document.getElementById('energy-fill').style.width = `${track.energy * 100}%`;
+        
+        document.querySelector('.glass-card').classList.remove('hidden');
+        
+        // Play via Spotify (Requires Premium for Web Playback SDK)
+        playTrack(track.uri);
+    }
+});
+
+async function playTrack(uri) {
+    const token = localStorage.getItem('access_token');
+    await fetch(`https://api.spotify.com/v1/me/player/play`, {
+        method: 'PUT',
+        body: JSON.stringify({ uris: [uri] }),
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+}
